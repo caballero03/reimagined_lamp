@@ -282,7 +282,6 @@
 
 
 		function createFileUploader(element, tree, editor){
-// 			var xmlHttp;
 			var input = document.createElement("input");
 			input.type = "file";
 			input.multiple = false;
@@ -515,12 +514,13 @@
   
         function createTreeLeaf(path, name, size){
           var leaf = document.createElement("li");
+          
           if( isCompressedFile(name) ) {
-			leaf.className = "comptype";
+			      leaf.className = "comptype";
           } else if( isImageFile(name) ) {
-			leaf.className = "imagetype";
+			      leaf.className = "imagetype";
           } else {
-			leaf.className = "filetype";
+			      leaf.className = "filetype";
           }
           
           leaf.id = (((path == "/")?"":path)+"/"+name).toLowerCase();
@@ -612,6 +612,7 @@
               case "cpp":
               case "css":
               case "xml":
+              case "ini":
                 return true;
             }
           }
