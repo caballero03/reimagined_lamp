@@ -10,10 +10,10 @@ Here is a brief list of current features:
 * Upload new files
 * Added additional icons for folders, text files, images and Gzipped files
 * Websocket-serial bridge (based on https://github.com/hallard/WebSocketToSerial)
-* jQuery 1.x,2.x and 3.x in minified Gzip form
+* jQuery 1.x, 2.x and 3.x in minified Gzip form
 * jQuery-UI (with smooth/scalable font icons)
-* Backbone.js
-* Marionette 3x
+* Backbone.js, underscore.js
+* Marionette 3.x
 * backbone.radio
 * Require.js (with example application framework starter)
 
