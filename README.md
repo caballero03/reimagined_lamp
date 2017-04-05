@@ -17,5 +17,11 @@ Here is a brief list of current features:
 * backbone.radio
 * Require.js (with example application framework starter)
 
+The webserver serves files with caching turned on for all Gzip'd files. Browser caching allows for fast page load times. 
+
+## Arduino Libraries Needed
+* https://github.com/me-no-dev/ESPAsyncTCP
+* https://github.com/me-no-dev/ESPAsyncWebServer
+
 
 
