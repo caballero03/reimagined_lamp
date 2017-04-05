@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>SPIFFS Editor</title>
+    <style type="text/css" media="screen">
+      .contextMenu {
+        z-index: 300;
+        position: absolute;
+        left: 5px;
+        border: 1px solid #444;
+        background-color: #F5F5F5;
+        display: none;
+        box-shadow: 0 0 10px rgba( 0, 0, 0, .4 );
+        font-size: 12px;
+        font-family: sans-serif;
+        font-weight:bold;
+      }
+      .contextMenu ul {
+        list-style: none;
+        top: 0;
+        left: 0;
+        margin: 0;
+        padding: 0;
+      }
+      .contextMenu li {
+        position: relative;
+        min-width: 60px;
+        cursor: pointer;
+      }
+      .contextMenu span {
+        color: #444;
+        display: inline-block;
+        padding: 6px;
+      }
+      .contextMenu li:hover { background: #444; }
+      .contextMenu li:hover span { color: #EEE; }
+    
+      .css-treeview ul, .css-treeview li {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+      }
+
+      .css-treeview input {
+        position: absolute;
+        opacity: 0;
+      }
+
+      .css-treeview {
+        font: normal 11px Verdana, Arial, Sans-serif;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+      }
+
+      .css-treeview span {
+        color: #00f;
+        cursor: pointer;
+      }
+      
+      .css-treeview span.filesize {
+        float: right;
+        font-size: 8px !important;
+        padding-right: 0.8em;
+      }
+
+      .css-treeview span:hover {
+        text-decoration: underline;
+      }
+
+      .css-treeview input + label + ul {
+        margin: 0 0 0 22px;
+      }
+
+      .css-treeview input ~ ul {
+        display: none;
+      }
+
+      .css-treeview label, .css-treeview label::before {
+        cursor: pointer;
+      }
+
+      .css-treeview input:disabled + label {
+        cursor: default;
+        opacity: .6;
+      }
+
+      .css-treeview input:checked:not(:disabled) ~ ul {
+        display: block;
+      }
+
+      .css-treeview label, li.filetype span:first-child, li.comptype span:first-child, li.imagetype span:first-child, .css-treeview label::before {
+        background: url("data:image/png;base64,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") no-repeat;
+      }
+
+      .css-treeview label, li.filetype span:first-child, li.comptype span:first-child, li.imagetype span:first-child, .css-treeview label::before {
+        display: inline-block;
+        height: 16px;
+        line-height: 16px;
+        vertical-align: middle;
+      }
+
+/*       folder icon??? base img offset? :-| */
+      .css-treeview label {
+        background-position: 18px 0;
+      }
+
+/*       plus icon */
+      .css-treeview label::before {
+        content: "";
+        width: 16px;
+        margin: 0 22px 0 0;
+        vertical-align: middle;
+        background-position: 0 -32px;
+      }
+
+/*       minus icon */
+      .css-treeview input:checked + label::before {
+        background-position: 0 -16px;
+      }
+      
+      .css-treeview li.filetype span:first-child {
+        padding-left: 16px;
+        background-position: 0 -48px;
+      }
+      
+      .css-treeview li.comptype span:first-child {
+        padding-left: 16px;
+        background-position: 0 -64px;
+      }
+      
+      .css-treeview li.imagetype span:first-child {
+        padding-left: 16px;
+        background-position: 0 -80px;
+      }
+
+      /* webkit adjacent element selector bugfix */
+      @media screen and(-webkit-min-device-pixel-ratio:0)
+      {
+        .css-treeview{
+          -webkit-animation: webkit-adjacent-element-selector-bugfix infinite 1s;
+        }
+
+        @-webkit-keyframes webkit-adjacent-element-selector-bugfix 
+        {
+          from  { 
+            padding: 0;
+          } 
+          to  { 
+            padding: 0;
+          }
+        }
+      }
+
+      #uploader { 
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        height:28px;
+        line-height: 24px;
+        padding-left: 10px;
+        background-color: #444;
+        color:#EEE;
+      }
+      #tree { 
+        position: absolute;
+        top: 28px;
+        bottom: 0;
+        left: 0;
+        width:220px;
+        padding: 8px;
+      }
+      #editor, #preview { 
+        position: absolute;
+        top: 28px;
+        right: 0;
+        bottom: 0;
+        left: 220px;
+      }
+      #preview {
+        background-color: #EEE;
+        padding:5px;
+      }
+      #loader { 
+        position: absolute;
+        top: 36%;
+        right: 40%;
+      }
+      .loader {
+        z-index: 10000;
+        border: 8px solid #b5b5b5; /* Grey */
+        border-top: 8px solid #3498db; /* Blue */
+        border-bottom: 8px solid #3498db; /* Blue */
+        border-radius: 50%;
+        width: 240px;
+        height: 240px;
+        animation: spin 2s linear infinite;
+        display:none;
+      }
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
+    <script>
+		function ge(a){
+			return document.getElementById(a);
+		}
+		function ce(a){
+			return document.createElement(a);
+		}
+
+		var QueuedRequester = function () {
+			this.queue = [];
+			this.running = false;
+			this.xmlhttp = null;
+		}
+		
+		QueuedRequester.prototype = {
+			_request: function(req){
+				this.running = true;
+				if(!req instanceof Object) return;
+				var that = this;
+				
+				function ajaxCb(x,d){ return function(){
+					if (x.readyState == 4){
+						ge("loader").style.display = "none";
+						d.callback(x.status, x.responseText);
+						if(that.queue.length === 0) that.running = false;
+						if(that.running) that._request(that.queue.shift());
+					}
+				}}
+				
+				ge("loader").style.display = "block";
+				
+				var p = "";
+				
+				if(req.params instanceof FormData){
+					p = req.params;
+				} else if(req.params instanceof Object){
+					for (var key in req.params) {
+						if(p === "")
+						p += (req.method === "GET")?"?":"";
+						else
+						p += "&";
+						p += encodeURIComponent(key+"="+req.params[key]);
+					};
+				}
+				
+				this.xmlhttp = new XMLHttpRequest();
+				this.xmlhttp.onreadystatechange = ajaxCb(this.xmlhttp, req);
+				
+				if(req.method === "GET"){
+					this.xmlhttp.open(req.method, req.url+p, true);
+					this.xmlhttp.send();
+				} else {
+					this.xmlhttp.open(req.method, req.url, true);
+					if(p instanceof String)
+						this.xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+					this.xmlhttp.send(p);
+				}
+			},
+			stop: function(){
+				if(this.running) this.running = false;
+				
+				if(this.xmlhttp && this.xmlhttp.readyState < 4){
+					this.xmlhttp.abort();
+				}
+			},
+			add: function(method, url, params, callback){
+				this.queue.push({url:url,method:method,params:params,callback:callback});
+				
+				if(!this.running){
+					this._request(this.queue.shift());
+				}
+			}
+		}
+
+		var requests = new QueuedRequester();
+
+
+
+		function createFileUploader(element, tree, editor){
+// 			var xmlHttp;
+			var input = document.createElement("input");
+			input.type = "file";
+			input.multiple = false;
+			input.name = "data";
+			document.getElementById(element).appendChild(input);
+			var path = document.createElement("input");
+			path.id = "upload-path";
+			path.type = "text";
+			path.name = "path";
+			path.defaultValue = "/";
+			document.getElementById(element).appendChild(path);
+			var button = document.createElement("button");
+			button.innerHTML = 'Upload';
+			document.getElementById(element).appendChild(button);
+			var mkdir = document.createElement("button");
+			mkdir.innerHTML = 'MkDir';
+			document.getElementById(element).appendChild(mkdir);
+			var mkfile = document.createElement("button");
+			mkfile.innerHTML = 'MkFile';
+			document.getElementById(element).appendChild(mkfile);
+			var saveFile = document.createElement("button");
+			saveFile.innerHTML = 'Save';
+			document.getElementById(element).appendChild(saveFile);
+			var undoButton = document.createElement("button");
+			undoButton.innerHTML = 'Undo';
+			document.getElementById(element).appendChild(undoButton);
+			var redoButton = document.createElement("button");
+			redoButton.innerHTML = 'Redo';
+			document.getElementById(element).appendChild(redoButton);
+			
+			function httpPostProcessRequest(status, responseText){
+				if(status != 200)
+					alert("ERROR["+status+"]: "+responseText);
+				else
+					tree.refreshPath(path.value);
+			}
+        
+		function createPath(p){
+			var formData = new FormData();
+			formData.append("path", p);
+			requests.add("PUT", "/edit", formData, httpPostProcessRequest);
+		}
+        
+        saveFile.onclick = function (e) {
+            editor.execCommand("saveCommand");
+        };
+        
+        undoButton.onclick = function (e) {
+            editor.getSession().getUndoManager().undo(false);
+        };
+        
+        redoButton.onclick = function (e) {
+            editor.getSession().getUndoManager().redo(false);
+        };
+        
+        mkfile.onclick = function(e){
+          if(path.value.indexOf(".") === -1) return;
+          createPath(path.value);
+          editor.loadUrl(path.value);
+        };
+        
+        mkdir.onclick = function(e){
+          if(path.value.length < 2) return;
+          var dir = path.value
+          if(dir.indexOf(".") !== -1){
+            if(dir.lastIndexOf("/") === 0) return;
+            dir = dir.substring(0, dir.lastIndexOf("/"));
+          }
+          createPath(dir);
+        };
+        
+        // This is the Upload button
+		button.onclick = function(e){
+			if(input.files.length === 0){
+				return;
+			}
+			
+			var formData = new FormData();
+			formData.append("data", input.files[0], path.value);
+			requests.add("POST", "/edit", formData, httpPostProcessRequest);
+		};
+        
+        input.onchange = function(e){
+          if(input.files.length === 0) return;
+          var filename = input.files[0].name;
+          var ext = /(?:\.([^.]+))?$/.exec(filename)[1];
+          var name = /(.*)\.[^.]+$/.exec(filename)[1];
+          if(typeof name !== undefined){
+            if(name.length > 8) name = name.substring(0, 8);
+            filename = name;
+          }
+          if(typeof ext !== undefined){
+            if(ext === "html") ext = "htm";
+            else if(ext === "jpeg") ext = "jpg";
+            filename = filename + "." + ext;
+          }
+          if(path.value === "/" || path.value.lastIndexOf("/") === 0){
+            path.value = "/"+filename;
+          } else {
+            path.value = path.value.substring(0, path.value.lastIndexOf("/")+1)+filename;
+          }
+        }
+      }
+      
+      function createTree(element, editor){
+        var preview = document.getElementById("preview");
+        var treeRoot = document.createElement("div");
+        treeRoot.className = "css-treeview";
+        document.getElementById(element).appendChild(treeRoot);
+  
+        function loadDownload(path){
+          document.getElementById('download-frame').src = path+"?download=true";
+        }
+  
+        function loadPreview(path){
+          document.getElementById("editor").style.display = "none";
+          preview.style.display = "block";
+          preview.innerHTML = '<img src="'+path+'" style="max-width:100%; max-height:100%; margin:auto; display:block;" />';
+        }
+  
+        function fillFolderMenu(el, path){
+          var list = document.createElement("ul");
+          el.appendChild(list);
+          var action = document.createElement("li");
+          list.appendChild(action);
+          var isChecked = document.getElementById(path).checked;
+          var expnd = document.createElement("li");
+          list.appendChild(expnd);
+          if(isChecked){
+            expnd.innerHTML = "<span>Collapse</span>";
+            expnd.onclick = function(e){
+              document.getElementById(path).checked = false;
+              if(document.body.getElementsByClassName('contextMenu').length > 0) document.body.removeChild(el);
+            };
+            var refrsh = document.createElement("li");
+            list.appendChild(refrsh);
+            refrsh.innerHTML = "<span>Refresh</span>";
+            refrsh.onclick = function(e){
+              var leaf = document.getElementById(path).parentNode;
+              if(leaf.childNodes.length == 3) leaf.removeChild(leaf.childNodes[2]);
+              httpGet(leaf, path);
+              if(document.body.getElementsByClassName('contextMenu').length > 0) document.body.removeChild(el);
+            };
+          } else {
+            expnd.innerHTML = "<span>Expand</span>";
+            expnd.onclick = function(e){
+              document.getElementById(path).checked = true;
+              var leaf = document.getElementById(path).parentNode;
+              if(leaf.childNodes.length == 3) leaf.removeChild(leaf.childNodes[2]);
+              httpGet(leaf, path);
+              if(document.body.getElementsByClassName('contextMenu').length > 0) document.body.removeChild(el);
+            };
+          }
+          var upload = document.createElement("li");
+          list.appendChild(upload);
+          upload.innerHTML = "<span>Upload</span>";
+          upload.onclick = function(e){
+            var pathEl = document.getElementById("upload-path");
+            if(pathEl){
+              var subPath = pathEl.value;
+              if(subPath.lastIndexOf("/") < 1) pathEl.value = path+subPath;
+              else pathEl.value = path.substring(subPath.lastIndexOf("/"))+subPath;
+            }
+            if(document.body.getElementsByClassName('contextMenu').length > 0) document.body.removeChild(el);
+          };
+          var delFile = document.createElement("li");
+          list.appendChild(delFile);
+          delFile.innerHTML = "<span>Delete</span>";
+          delFile.onclick = function(e){
+            httpDelete(path);
+            if(document.body.getElementsByClassName('contextMenu').length > 0) document.body.removeChild(el);
+          };
+        }
+  
+        function fillFileMenu(el, path){
+          var list = document.createElement("ul");
+          el.appendChild(list);
+          var action = document.createElement("li");
+          list.appendChild(action);
+          if(isTextFile(path)){
+            action.innerHTML = "<span>Edit</span>";
+            action.onclick = function(e){
+              editor.loadUrl(path);
+              if(document.body.getElementsByClassName('contextMenu').length > 0) document.body.removeChild(el);
+            };
+          } else if(isImageFile(path)){
+            action.innerHTML = "<span>Preview</span>";
+            action.onclick = function(e){
+              loadPreview(path);
+              if(document.body.getElementsByClassName('contextMenu').length > 0) document.body.removeChild(el);
+            };
+          }
+          var download = document.createElement("li");
+          list.appendChild(download);
+          download.innerHTML = "<span>Download</span>";
+          download.onclick = function(e){
+            loadDownload(path);
+            if(document.body.getElementsByClassName('contextMenu').length > 0) document.body.removeChild(el);
+          };
+          var delFile = document.createElement("li");
+          list.appendChild(delFile);
+          delFile.innerHTML = "<span>Delete</span>";
+          delFile.onclick = function(e){
+            httpDelete(path);
+            if(document.body.getElementsByClassName('contextMenu').length > 0) document.body.removeChild(el);
+          };
+        }
+  
+        function showContextMenu(e, path, isfile){
+          var divContext = document.createElement("div");
+          var scrollTop = document.body.scrollTop ? document.body.scrollTop : document.documentElement.scrollTop;
+          var scrollLeft = document.body.scrollLeft ? document.body.scrollLeft : document.documentElement.scrollLeft;
+          var left = e.clientX + scrollLeft;
+          var top = e.clientY + scrollTop;
+          divContext.className = 'contextMenu';
+          divContext.style.display = 'block';
+          divContext.style.left = left + 'px';
+          divContext.style.top = top + 'px';
+          if(isfile) fillFileMenu(divContext, path);
+          else fillFolderMenu(divContext, path);
+          document.body.appendChild(divContext);
+          var width = divContext.offsetWidth;
+          var height = divContext.offsetHeight;
+          divContext.onmouseout = function(e){
+            if(e.clientX < left || e.clientX > (left + width) || e.clientY < top || e.clientY > (top + height)){
+              if(document.body.getElementsByClassName('contextMenu').length > 0) document.body.removeChild(divContext);
+            }
+          };
+        }
+  
+        function createTreeLeaf(path, name, size){
+          var leaf = document.createElement("li");
+          if( isCompressedFile(name) ) {
+			leaf.className = "comptype";
+          } else if( isImageFile(name) ) {
+			leaf.className = "imagetype";
+          } else {
+			leaf.className = "filetype";
+          }
+          
+          leaf.id = (((path == "/")?"":path)+"/"+name).toLowerCase();
+          var label = document.createElement("span");
+          label.textContent = name.toLowerCase();
+          leaf.appendChild(label);
+          var filesize = document.createElement("span");
+          filesize.className = "filesize";
+          filesize.textContent = size;
+          leaf.appendChild(filesize);
+          
+          leaf.onclick = function(e){
+            if(isTextFile(leaf.id)){
+              editor.loadUrl(leaf.id);
+            } else if(isImageFile(leaf.id)){
+              loadPreview(leaf.id);
+            }
+          };
+          leaf.oncontextmenu = function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            showContextMenu(e, leaf.id, true);
+          };
+          return leaf;
+        }
+  
+        function createTreeBranch(path, name, disabled){
+          var leaf = document.createElement("li");
+          var check = document.createElement("input");
+          check.type = "checkbox";
+          check.id = (((path == "/")?"":path)+"/"+name).toLowerCase();
+          if(typeof disabled !== "undefined" && disabled) check.disabled = "disabled";
+          leaf.appendChild(check);
+          var label = document.createElement("label");
+          label.for = check.id;
+          label.textContent = name.toLowerCase();
+          leaf.appendChild(label);
+          check.onchange = function(e){
+            if(check.checked){
+              if(leaf.childNodes.length == 3) leaf.removeChild(leaf.childNodes[2]);
+              httpGet(leaf, check.id);
+            }
+          };
+          label.onclick = function(e){
+            if(!check.checked){
+              check.checked = true;
+              if(leaf.childNodes.length == 3) leaf.removeChild(leaf.childNodes[2]);
+              httpGet(leaf, check.id);
+            } else {
+              check.checked = false;
+            }
+          };
+          leaf.oncontextmenu = function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            showContextMenu(e, check.id, false);
+          }
+          return leaf;
+        }
+  
+        function addList(parent, path, items){
+          var list = document.createElement("ul");
+          parent.appendChild(list);
+          var ll = items.length;
+          for(var i = 0; i < ll; i++){
+            var item = items[i];
+            var itemEl;
+            if(item.type === "file"){
+              itemEl = createTreeLeaf(path, item.name, item.size);
+            } else {
+              itemEl = createTreeBranch(path, item.name);
+            }
+            list.appendChild(itemEl);
+          }
+    
+        }
+  
+        function isTextFile(path){
+          var ext = /(?:\.([^.]+))?$/.exec(path)[1];
+          if(typeof ext !== undefined){
+            switch(ext){
+              case "txt":
+              case "htm":
+              case "html":
+              case "js":
+              case "json":
+              case "c":
+              case "h":
+              case "cpp":
+              case "css":
+              case "xml":
+                return true;
+            }
+          }
+          return false;
+        }
+  
+        function isImageFile(path){
+          var ext = /(?:\.([^.]+))?$/.exec(path)[1];
+          if(typeof ext !== undefined){
+            switch(ext){
+              case "png":
+              case "jpg":
+              case "gif":
+              case "ico":
+                return true;
+            }
+          }
+          return false;
+        }
+        
+        function isCompressedFile(path){
+          var ext = /(?:\.([^.]+))?$/.exec(path)[1];
+          if(typeof ext !== undefined){
+            switch(ext){
+              case "zip":
+              case "tgz":
+              case "gz":
+              case "jar":
+                return true;
+            }
+          }
+          return false;
+        }
+  
+        this.refreshPath = function(path){
+          if(path.lastIndexOf('/') < 1){
+            path = '/';
+            treeRoot.removeChild(treeRoot.childNodes[0]);
+            httpGet(treeRoot, "/");
+          } else {
+            path = path.substring(0, path.lastIndexOf('/'));
+            var leaf = document.getElementById(path).parentNode;
+            if(leaf.childNodes.length == 3) leaf.removeChild(leaf.childNodes[2]);
+            httpGet(leaf, path);
+          }
+        };
+  
+        
+		function delCb(path){
+			return function(status, responseText){
+				if(status != 200){
+					alert("ERROR["+status+"]: "+responseText);
+				} else {
+// 					treeRoot.removeChild(treeRoot.childNodes[0]);
+// 					httpGet(treeRoot, "/");
+					if(path.lastIndexOf('/') < 1){
+						path = '/';
+						treeRoot.removeChild(treeRoot.childNodes[0]);
+						httpGet(treeRoot, "/");
+					} else {
+						path = path.substring(0, path.lastIndexOf('/'));
+						var leaf = document.getElementById(path).parentNode;
+						if(leaf.childNodes.length == 3) leaf.removeChild(leaf.childNodes[2]);
+						httpGet(leaf, path);
+					}
+				}
+			}
+		}
+        
+		function httpDelete(filename){
+			var formData = new FormData();
+			formData.append("path", filename);
+			requests.add("DELETE", "/edit", formData, delCb(filename));
+		}
+
+
+		function getCb(parent, path){
+			return function(status, responseText){
+				if(status == 200)
+				var data = JSON.parse(responseText);
+				var newData = [];
+				var dirs = [];
+
+				var ll = data.length;
+				for(var i = 0; i < ll; i++){
+					var item = data[i];
+					if(path.length > 1 ) {
+						item.name = item.name.substring(path.length);
+					}
+					var slashPos = item.name.indexOf("/");
+					
+					if( slashPos != -1 && dirs.indexOf(item.name.substring(0,slashPos)) == -1 ) {
+						dirs.push(item.name.substring(0,slashPos));
+						item.name = item.name.substring(0,slashPos);
+						
+						newData.push({"type":"dir","name": item.name,"size": 0});
+					} else {
+						if( item.name.indexOf("/") == -1 ) {
+							newData.push(item);
+						}
+					}
+				}
+				
+				newData.sort(function(a, b) {
+					return a.type < b.type;
+				});
+				
+				addList(parent, path, newData);
+			}
+		}
+
+		function httpGet(parent, path){
+			requests.add("GET", "/list", { dir: path }, getCb(parent, path));
+		}
+  
+        
+        httpGet(treeRoot, "/");
+        return this;
+      }
+
+      function createEditor(element, file, lang, theme, type){
+        function getLangFromFilename(filename){
+          var lang = "plain";
+          var ext = /(?:\.([^.]+))?$/.exec(filename)[1];
+          if(typeof ext !== undefined){
+            switch(ext){
+              case "txt": lang = "plain"; break;
+              case "htm": lang = "html"; break;
+              case "js": lang = "javascript"; break;
+              case "c": lang = "c_cpp"; break;
+              case "cpp": lang = "c_cpp"; break;
+              case "css":
+              case "scss":
+              case "php":
+              case "html":
+              case "json":
+              case "xml":
+                lang = ext;
+            }
+          }
+          return lang;
+        }
+  
+        if(typeof file === "undefined") file = "/index.html";
+        
+        window.title = file;
+  
+        if(typeof lang === "undefined"){
+          lang = getLangFromFilename(file);
+        }
+  
+//         if (typeof theme === "undefined") theme = "tomorrow_night_bright";
+		if (typeof theme === "undefined") theme = "cobalt";
+//         if (typeof theme === "undefined") theme = "tomorrow_night_blue";
+  
+        if(typeof type === "undefined"){
+          type = "text/"+lang;
+          if(lang === "c_cpp") type = "text/plain";
+        }
+  
+//         var xmlHttp = null;
+        var editor = ace.edit(element);
+  
+        //post
+//         function httpPostProcessRequest(){
+//           if (xmlHttp.readyState == 4){
+//             if(xmlHttp.status != 200) alert("ERROR["+xmlHttp.status+"]: "+xmlHttp.responseText);
+//           }
+//         }
+        
+		function httpPostProcessRequest(status, responseText){
+			if(status != 200) alert("ERROR["+status+"]: "+responseText);
+		}
+        
+        
+        
+		function httpPost(filename, data, type){
+			var formData = new FormData();
+			formData.append("data", new Blob([data], { type: type }), filename);
+			requests.add("POST", "/edit", formData, httpPostProcessRequest);
+		}
+        
+        //get
+		function httpGetProcessRequest(status, responseText){
+			ge("preview").style.display = "none";
+			ge("editor").style.display = "block";
+			
+			if(status == 200)
+				editor.setValue(responseText);
+			else
+				editor.setValue("");
+				
+			editor.clearSelection();
+		}
+		
+		function httpGet(theUrl){
+			requests.add("GET", theUrl, {}, httpGetProcessRequest);
+		}
+  
+        if(lang !== "plain") editor.getSession().setMode("ace/mode/"+lang);
+        editor.setTheme("ace/theme/"+theme);
+        editor.$blockScrolling = Infinity;
+        editor.getSession().setUseSoftTabs(true);
+        editor.getSession().setTabSize(2);
+        editor.setHighlightActiveLine(true);
+        editor.setShowPrintMargin(false);
+        editor.commands.addCommand({
+            name: 'saveCommand',
+            bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
+            exec: function(editor) {
+              httpPost(file, editor.getValue()+"", type);
+            },
+            readOnly: false
+        });
+        editor.commands.addCommand({
+            name: 'undoCommand',
+            bindKey: {win: 'Ctrl-Z',  mac: 'Command-Z'},
+            exec: function(editor) {
+              editor.getSession().getUndoManager().undo(false);
+            },
+            readOnly: false
+        });
+        editor.commands.addCommand({
+            name: 'redoCommand',
+            bindKey: {win: 'Ctrl-Shift-Z',  mac: 'Command-Shift-Z'},
+            exec: function(editor) {
+              editor.getSession().getUndoManager().redo(false);
+            },
+            readOnly: false
+        });
+        httpGet(file);
+        editor.loadUrl = function(filename){
+          file = filename;
+          lang = getLangFromFilename(file);
+          type = "text/"+lang;
+          if(lang !== "plain") editor.getSession().setMode("ace/mode/"+lang);
+          httpGet(file);
+        }
+        return editor;
+      } // End createEditor
+      
+      function onBodyLoad(){
+        var vars = {};
+        var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) { vars[key] = value; });
+        var editor = createEditor("editor", vars.file, vars.lang, vars.theme);
+        var tree = createTree("tree", editor);
+        createFileUploader("uploader", tree, editor);
+      };
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/ace.js" type="text/javascript" charset="utf-8"></script>
+<!--     <script src="js/ace.js" type="text/javascript" charset="utf-8"></script> -->
+  </head>
+  <body onload="onBodyLoad();">
+	<div id="loader" class="loader"></div>
+    <div id="uploader"></div>
+    <div id="tree"></div>
+    <div id="editor"></div>
+    <div id="preview" style="display:none;"></div>
+    <iframe id=download-frame style='display:none;'></iframe>
+  </body>
+</html>

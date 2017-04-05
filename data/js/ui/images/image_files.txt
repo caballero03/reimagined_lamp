@@ -1,0 +1,58 @@
+
+
+mv ui-bg_diagonals-thick_18_b81900_40x40.png ui-img-1.png
+sed -i 's/ui-bg_diagonals-thick_18_b81900_40x40.png/ui-img-1.png/g' ../jquery-ui.min.css
+sed -i 's/ui-bg_diagonals-thick_18_b81900_40x40.png/ui-img-1.png/g' ../jquery-ui.theme.min.css
+
+mv ui-bg_diagonals-thick_20_666666_40x40.png ui-img-2.png
+sed -i 's/ui-bg_diagonals-thick_20_666666_40x40.png/ui-img-2.png/g' ../jquery-ui.min.css
+sed -i 's/ui-bg_diagonals-thick_20_666666_40x40.png/ui-img-2.png/g' ../jquery-ui.theme.min.css
+
+mv ui-bg_flat_10_000000_40x100.png ui-img-3.png
+sed -i 's/ui-bg_flat_10_000000_40x100.png/ui-img-3.png/g' ../jquery-ui.min.css
+sed -i 's/ui-bg_flat_10_000000_40x100.png/ui-img-3.png/g' ../jquery-ui.theme.min.css
+
+mv ui-bg_glass_100_f6f6f6_1x400.png ui-img-4.png
+sed -i 's/ui-bg_glass_100_f6f6f6_1x400.png/ui-img-4.png/g' ../jquery-ui.min.css
+sed -i 's/ui-bg_glass_100_f6f6f6_1x400.png/ui-img-4.png/g' ../jquery-ui.theme.min.css
+
+mv ui-bg_glass_100_fdf5ce_1x400.png ui-img-5.png
+sed -i 's/ui-bg_glass_100_fdf5ce_1x400.png/ui-img-5.png/g' ../jquery-ui.min.css
+sed -i 's/ui-bg_glass_100_fdf5ce_1x400.png/ui-img-5.png/g' ../jquery-ui.theme.min.css
+
+mv ui-bg_glass_65_ffffff_1x400.png ui-img-6.png
+sed -i 's/ui-bg_glass_65_ffffff_1x400.png/ui-img-6.png/g' ../jquery-ui.min.css
+sed -i 's/ui-bg_glass_65_ffffff_1x400.png/ui-img-6.png/g' ../jquery-ui.theme.min.css
+
+mv ui-bg_gloss-wave_35_f6a828_500x100.png ui-img-7.png
+sed -i 's/ui-bg_gloss-wave_35_f6a828_500x100.png/ui-img-7.png/g' ../jquery-ui.min.css
+sed -i 's/ui-bg_gloss-wave_35_f6a828_500x100.png/ui-img-7.png/g' ../jquery-ui.theme.min.css
+
+mv ui-bg_highlight-soft_100_eeeeee_1x100.png ui-img-8.png
+sed -i 's/ui-bg_highlight-soft_100_eeeeee_1x100.png/ui-img-8.png/g' ../jquery-ui.min.css
+sed -i 's/ui-bg_highlight-soft_100_eeeeee_1x100.png/ui-img-8.png/g' ../jquery-ui.theme.min.css
+
+mv ui-bg_highlight-soft_75_ffe45c_1x100.png ui-img-9.png
+sed -i 's/ui-bg_highlight-soft_75_ffe45c_1x100.png/ui-img-9.png/g' ../jquery-ui.min.css
+sed -i 's/ui-bg_highlight-soft_75_ffe45c_1x100.png/ui-img-9.png/g' ../jquery-ui.theme.min.css
+
+mv ui-icons_222222_256x240.png ui-img-a.png
+sed -i 's/ui-icons_222222_256x240.png/ui-img-a.png/g' ../jquery-ui.min.css
+sed -i 's/ui-icons_222222_256x240.png/ui-img-a.png/g' ../jquery-ui.theme.min.css
+
+mv ui-icons_228ef1_256x240.png ui-img-b.png
+sed -i 's/ui-icons_228ef1_256x240.png/ui-img-b.png/g' ../jquery-ui.min.css
+sed -i 's/ui-icons_228ef1_256x240.png/ui-img-b.png/g' ../jquery-ui.theme.min.css
+
+mv ui-icons_ef8c08_256x240.png ui-img-c.png
+sed -i 's/ui-icons_ef8c08_256x240.png/ui-img-c.png/g' ../jquery-ui.min.css
+sed -i 's/ui-icons_ef8c08_256x240.png/ui-img-c.png/g' ../jquery-ui.theme.min.css
+
+mv ui-icons_ffd27a_256x240.png ui-img-d.png
+sed -i 's/ui-icons_ffd27a_256x240.png/ui-img-d.png/g' ../jquery-ui.min.css
+sed -i 's/ui-icons_ffd27a_256x240.png/ui-img-d.png/g' ../jquery-ui.theme.min.css
+
+mv ui-icons_ffffff_256x240.png ui-img-e.png
+sed -i 's/ui-icons_ffffff_256x240.png/ui-img-e.png/g' ../jquery-ui.min.css
+sed -i 's/ui-icons_ffffff_256x240.png/ui-img-e.png/g' ../jquery-ui.theme.min.css
+
