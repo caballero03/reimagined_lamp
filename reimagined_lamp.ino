@@ -251,17 +251,9 @@ static void _u0_putc(char c){
 const char* http_username = "admin";
 const char* http_password = "admin";
 
-// Home network
-// const char* ssid = "belkin.7c0";
-// const char* password = "yourwifipassword";
-
-// FP Wireless
-//const char* ssid = "FPWIRELESS";
-//const char* password = "thereishiorlingchiofthegenusganoderma";
-
-// Laptop Wireless
- const char* ssid = "Connectify-fp";
- const char* password = "yourwifipassword";
+// Wireless settings
+// const char* ssid = "ssidgoeshere";
+// const char* password = "";
 
 String inputString = "";
 bool serialSwapped = false;
