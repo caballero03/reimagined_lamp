@@ -1,0 +1,26 @@
+
+/* Stylesheet for App
+ *
+ *
+ */ 
+
+
+body {
+	font-family: arial;
+	background-color: #ffe;
+}
+
+table {
+	border-collapse: collapse;
+	border: 1px solid black;
+	background-color: #fff;
+}
+
+th {
+	background-color: #fed;
+}
+
+td, th {
+	padding: 0.5em;
+	border: 1px solid black;
+}
