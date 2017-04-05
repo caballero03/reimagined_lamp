@@ -176,26 +176,16 @@ class SPIFFSEditor2: public AsyncWebHandler {
           path += "index.html";
 		
 			String pathWithGz = path + ".gz";
-// 		
-// 			if(SPIFFS.exists(pathWithGz) || SPIFFS.exists(path)) {
-// 				if(SPIFFS.exists(pathWithGz))
-// 					path += ".gz";
 			
-				AsyncWebServerResponse *response = request->beginResponse(SPIFFS, path, String(), request->hasParam("download"));
-				
-				if(SPIFFS.exists(pathWithGz)) {
-// 					response->addHeader("Content-Encoding", "gzip");
-					response->addHeader("Cache-Control", "max-age=86400");
-				} else {
-					response->addHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
-				}
-				
-				request->send(response);
+			AsyncWebServerResponse *response = request->beginResponse(SPIFFS, path, String(), request->hasParam("download"));
 			
-// 			} else {
-// 				// 404 error goes here
-// 				request->send(404);
-// 			}
+			if(SPIFFS.exists(pathWithGz)) {
+				response->addHeader("Cache-Control", "max-age=86400");
+			} else {
+				response->addHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
+			}
+			
+			request->send(response);
 		
       } else if(request->method() == HTTP_DELETE){
         if(request->hasParam("path", true)){
