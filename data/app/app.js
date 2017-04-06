@@ -64,7 +64,7 @@ function(Mn, ChannelList, ChanView) {
 		    console.log("success:", response);
 		  },
 		  
-		  error( collection, response, options ) {
+		  error: function( collection, response, options ) {
 		    console.error("error:", response);
 		  }
 		});
